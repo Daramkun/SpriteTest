@@ -67,10 +67,10 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitmapDX11.cs" />
-    <Compile Include="BitmapOpenGL.cs" />
-    <Compile Include="DrawerDX11.cs" />
-    <Compile Include="DrawerOpenGL.cs" />
+    <Compile Include="GameObjects\DX11\BitmapDX11.cs" />
+    <Compile Include="GameObjects\OGL\BitmapOpenGL.cs" />
+    <Compile Include="GameObjects\DX11\DrawerDX11.cs" />
+    <Compile Include="GameObjects\OGL\DrawerOpenGL.cs" />
     <Compile Include="Framework\DirectTransitor.cs" />
     <Compile Include="Framework\FPSCalculator.cs" />
     <Compile Include="Framework\GameObject.cs" />
@@ -85,14 +85,14 @@
     <Compile Include="Framework\Scene.cs" />
     <Compile Include="Framework\SceneContainer.cs" />
     <Compile Include="Framework\StandardDispose.cs" />
-    <Compile Include="SpriteDX11.cs" />
+    <Compile Include="GameObjects\DX11\SpriteDX11.cs" />
     <Compile Include="SpriteObject.cs" />
-    <Compile Include="SpriteOpenGL.cs" />
-    <Compile Include="TestSceneDX11.cs" />
-    <Compile Include="TestSceneOpenGL.cs" />
-    <Compile Include="UniformBuffer.cs" />
-    <Compile Include="Vertex.cs" />
-    <Compile Include="World2.cs" />
+    <Compile Include="GameObjects\OGL\SpriteOpenGL.cs" />
+    <Compile Include="GameObjects\DX11\TestSceneDX11.cs" />
+    <Compile Include="GameObjects\OGL\TestSceneOpenGL.cs" />
+    <Compile Include="Structs\UniformBuffer.cs" />
+    <Compile Include="Structs\Vertex.cs" />
+    <Compile Include="Framework\World2.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

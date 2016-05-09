@@ -55,10 +55,8 @@ namespace SpriteTest
 				case Key.Number1: for ( int i = 0; i < 100; ++i ) Children.Add ( new SpriteObject ( bitmap1 ) ); break;
 				case Key.Number2: for ( int i = 0; i < 100; ++i ) Children.Add ( new SpriteObject ( bitmap2 ) ); break;
 
-				case Key.A: Children.Remove ( Children [ 0 ] ); break;
-				case Key.S: Children.Remove ( Children [ 0 ] ); break;
-				case Key.Z: for ( int i = 0; i < 100; ++i ) Children.Remove ( Children [ i ] ); break;
-				case Key.X: for ( int i = 0; i < 100; ++i ) Children.Remove ( Children [ i ] ); break;
+				case Key.A: if ( Children.Count > 0 ) Children.Remove ( Children [ 0 ] ); break;
+				case Key.S: for ( int i = 0; i < 100; ++i ) if ( Children.Count > 0 ) Children.Remove ( Children [ i ] ); break;
 			}
 		}
 
