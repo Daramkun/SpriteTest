@@ -116,8 +116,8 @@ void main ()
 			GL.UseProgram ( program );
 
 			GL.Enable ( EnableCap.Texture2D );
+			GL.Enable ( EnableCap.DepthTest );
 			GL.Disable ( EnableCap.CullFace );
-			GL.Disable ( EnableCap.DepthTest );
 
 			GL.UniformBlockBinding ( program, GL.GetUniformBlockIndex ( program, "transform" ), 0 );
 			drawer.SetConstant ( bitmap, world, context );

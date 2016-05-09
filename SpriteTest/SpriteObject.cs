@@ -9,6 +9,8 @@ namespace SpriteTest
 {
 	public class SpriteObject : GameObject
 	{
+		static int zOrder = 0;
+
 		IBitmap bitmap;
 		World2 world;
 		IDrawer drawer;
@@ -23,10 +25,10 @@ namespace SpriteTest
 		public override void OnInitialize ()
 		{
 			world = World2.Identity;
-			world.Translate = new Vector2 ( Program.rand.Next () % 800, Program.rand.Next () % 600 );
+			world.Translate = new Vector3 ( Program.rand.Next () % 800, Program.rand.Next () % 600, ( float ) ++zOrder );
 			world.RotationCenter = bitmap.Size / 2;
 			unit = ( float ) Program.rand.NextDouble ();
-			drawer = ( Parent is TestSceneDX11 ) ? new DrawerDX11 () : new DrawerOpenGL () as IDrawer;
+			drawer = ( Parent is TestSceneDX11 ) ? new DrawerDX11 () : ( ( Parent is TestSceneDX9 ) ? new DrawerDX9 () : new DrawerOpenGL () as IDrawer );
 		}
 
 		protected override void Dispose ( bool disposing )

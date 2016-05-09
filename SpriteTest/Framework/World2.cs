@@ -9,7 +9,7 @@ namespace SpriteTest
 {
 	public class World2
 	{
-		public Vector2 Translate;
+		public Vector3 Translate;
 		public Vector2 ScaleCenter;
 		public Vector2 Scale;
 		public float Rotation;
@@ -25,7 +25,7 @@ namespace SpriteTest
 			Scale = new Vector2 ( 1 );
 		}
 
-		public World2 ( Vector2 translate, Vector2 scale, Vector2 scaleCenter, float rotation, Vector2 rotationCenter )
+		public World2 ( Vector3 translate, Vector2 scale, Vector2 scaleCenter, float rotation, Vector2 rotationCenter )
 			: this ()
 		{
 			Translate = translate;
@@ -56,7 +56,7 @@ namespace SpriteTest
 			result *= Matrix4x4.CreateTranslation ( new Vector3 ( -ScaleCenter, 0 ) );
 			result *= Matrix4x4.CreateScale ( new Vector3 ( Scale, 1 ) );
 			result *= Matrix4x4.CreateTranslation ( new Vector3 ( ScaleCenter, 0 ) );
-			result *= Matrix4x4.CreateTranslation ( new Vector3 ( Translate, 0 ) );
+			result *= Matrix4x4.CreateTranslation ( Translate );
 		}
 	}
 }

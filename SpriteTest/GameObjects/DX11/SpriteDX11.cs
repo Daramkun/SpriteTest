@@ -107,7 +107,9 @@ float4 main( PIXEL_IN inVal ) : SV_TARGET
 
 			depthStencilState = new SharpDX.Direct3D11.DepthStencilState ( Program.d3dDevice, new SharpDX.Direct3D11.DepthStencilStateDescription ()
 			{
-				IsDepthEnabled = false,
+				IsDepthEnabled = true,
+				DepthComparison = SharpDX.Direct3D11.Comparison.Greater,
+				DepthWriteMask = SharpDX.Direct3D11.DepthWriteMask.All,
 				IsStencilEnabled = false,
 			} );
 		}
