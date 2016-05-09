@@ -102,13 +102,13 @@ float4 main( PIXEL_IN inVal ) : SV_TARGET
 				CullMode = SharpDX.Direct3D11.CullMode.None,
 				FillMode = SharpDX.Direct3D11.FillMode.Solid,
 				IsFrontCounterClockwise = true,
-				IsDepthClipEnabled = true,
+				IsDepthClipEnabled = false,
 			} );
 
 			depthStencilState = new SharpDX.Direct3D11.DepthStencilState ( Program.d3dDevice, new SharpDX.Direct3D11.DepthStencilStateDescription ()
 			{
 				IsDepthEnabled = true,
-				DepthComparison = SharpDX.Direct3D11.Comparison.Greater,
+				DepthComparison = SharpDX.Direct3D11.Comparison.LessEqual,
 				DepthWriteMask = SharpDX.Direct3D11.DepthWriteMask.All,
 				IsStencilEnabled = false,
 			} );

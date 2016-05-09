@@ -37,7 +37,7 @@ namespace SpriteTest
 			if ( !contexts.TryGetValue ( Thread.CurrentThread, out context ) )
 			{
 				context = new SharpDX.Direct3D11.DeviceContext ( Program.d3dDevice );
-				context.OutputMerger.SetRenderTargets ( Program.d3dRenderTargetView );
+				context.OutputMerger.SetRenderTargets ( Program.d3dDepthStencilView, Program.d3dRenderTargetView );
 				context.Rasterizer.SetViewport ( 0, 0, 800, 600, 0, 1 );
 				contexts.TryAdd ( Thread.CurrentThread, context );
 			}
@@ -98,6 +98,7 @@ namespace SpriteTest
 		public override void OnDraw ( GameTime gameTime )
 		{
 			Program.d3dDevice.ImmediateContext.ClearRenderTargetView ( Program.d3dRenderTargetView, new SharpDX.Mathematics.Interop.RawColor4 ( 0, 0, 0, 1 ) );
+			Program.d3dDevice.ImmediateContext.ClearDepthStencilView ( Program.d3dDepthStencilView, SharpDX.Direct3D11.DepthStencilClearFlags.Depth, 1, 0 );
 			
 			base.OnDraw ( gameTime );
 		}

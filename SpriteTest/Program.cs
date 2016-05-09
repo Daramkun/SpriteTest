@@ -20,6 +20,8 @@ namespace SpriteTest
 		public static SharpDX.Direct3D11.Device d3dDevice;
 		public static SharpDX.DXGI.SwapChain dxgiSwapChain;
 		public static SharpDX.Direct3D11.RenderTargetView d3dRenderTargetView;
+		public static SharpDX.Direct3D11.Texture2D d3dDepthStencilBuffer;
+		public static SharpDX.Direct3D11.DepthStencilView d3dDepthStencilView;
 
 		public static SharpDX.Direct3D9.Direct3D d3d9;
 		public static SharpDX.Direct3D9.Device d3dDevice9;
@@ -44,7 +46,21 @@ namespace SpriteTest
 			d3dRenderTargetView = new SharpDX.Direct3D11.RenderTargetView ( d3dDevice, backBuffer );
 			backBuffer.Dispose ();
 
-			d3dDevice.ImmediateContext.OutputMerger.SetRenderTargets ( d3dRenderTargetView );
+			d3dDepthStencilBuffer = new SharpDX.Direct3D11.Texture2D ( d3dDevice, new SharpDX.Direct3D11.Texture2DDescription ()
+			{
+				ArraySize = 1,
+				BindFlags = SharpDX.Direct3D11.BindFlags.DepthStencil,
+				Format = SharpDX.DXGI.Format.D24_UNorm_S8_UInt,
+				Width = 800,
+				Height = 600,
+				MipLevels = 1,
+				Usage = SharpDX.Direct3D11.ResourceUsage.Default,
+				CpuAccessFlags = SharpDX.Direct3D11.CpuAccessFlags.None,
+				SampleDescription = new SharpDX.DXGI.SampleDescription ( 1, 0 )
+			} );
+			d3dDepthStencilView = new SharpDX.Direct3D11.DepthStencilView ( d3dDevice, d3dDepthStencilBuffer );
+
+			d3dDevice.ImmediateContext.OutputMerger.SetRenderTargets ( d3dDepthStencilView, d3dRenderTargetView );
 			d3dDevice.ImmediateContext.Rasterizer.SetViewport ( 0, 0, 800, 600, 0, 1 );
 		}
 
@@ -76,8 +92,8 @@ namespace SpriteTest
 			openTK = window;
 			SceneContainer sceneContainer = new SceneContainer (
 				/*new TestSceneOpenGL ()/**/
-				/*new TestSceneDX11 ()/**/
-				/**/new TestSceneDX9 ()/**/
+				/**/new TestSceneDX11 ()/**/
+				/*new TestSceneDX9 ()/**/
 			);
 			GameTime updateGameTime = new GameTime (), renderGameTime = new GameTime ();
 			window.Load += ( sender, e ) =>
@@ -103,6 +119,8 @@ namespace SpriteTest
 				sceneContainer.OnUninitialize ();
 				d3dDevice9.Dispose ();
 				d3d9.Dispose ();
+				d3dDepthStencilView.Dispose ();
+				d3dDepthStencilBuffer.Dispose ();
 				d3dRenderTargetView.Dispose ();
 				dxgiSwapChain.Dispose ();
 				d3dDevice.Dispose ();
