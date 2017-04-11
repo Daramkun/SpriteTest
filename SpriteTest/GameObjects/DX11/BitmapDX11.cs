@@ -42,7 +42,7 @@ namespace SpriteTest
 				dataStream2.Write<Color> ( v2 );
 			}
 
-			texture = new SharpDX.Direct3D11.Texture2D ( Program.d3dDevice, new SharpDX.Direct3D11.Texture2DDescription ()
+			texture = new SharpDX.Direct3D11.Texture2D ( Program.d3dDevice11, new SharpDX.Direct3D11.Texture2DDescription ()
 			{
 				Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm,
 				Width = image.Width,
@@ -66,13 +66,13 @@ namespace SpriteTest
 		public BitmapDX11 ( Stream stream )
 		{
 			GetImageRawData ( stream );
-			shaderResourceView = new SharpDX.Direct3D11.ShaderResourceView ( Program.d3dDevice, texture, new SharpDX.Direct3D11.ShaderResourceViewDescription ()
+			shaderResourceView = new SharpDX.Direct3D11.ShaderResourceView ( Program.d3dDevice11, texture, new SharpDX.Direct3D11.ShaderResourceViewDescription ()
 			{
 				Texture2D = new SharpDX.Direct3D11.ShaderResourceViewDescription.Texture2DResource () { MipLevels = 1 },
 				Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture2D,
 				Format = SharpDX.DXGI.Format.R8G8B8A8_UNorm,
 			} );
-			samplerState = new SharpDX.Direct3D11.SamplerState ( Program.d3dDevice, new SharpDX.Direct3D11.SamplerStateDescription ()
+			samplerState = new SharpDX.Direct3D11.SamplerState ( Program.d3dDevice11, new SharpDX.Direct3D11.SamplerStateDescription ()
 			{
 				AddressU = SharpDX.Direct3D11.TextureAddressMode.Wrap,
 				AddressV = SharpDX.Direct3D11.TextureAddressMode.Wrap,

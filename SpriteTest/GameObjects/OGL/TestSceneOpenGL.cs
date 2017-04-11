@@ -57,7 +57,19 @@ namespace SpriteTest
 
 		public override void OnUpdate ( GameTime gameTime )
 		{
-			base.OnUpdate ( gameTime );
+			if ( Program.sceneContainer.Children.Count > 0 )
+			{
+				var fpsCalc = Program.sceneContainer.Children [ 0 ] as FPSCalculator;
+				if ( fpsCalc.FPS >= 60 )
+					Children.Add ( new SpriteObject ( bitmap1 ) );
+				else
+				{
+					if ( Children.Count > 0 )
+						Children.Remove ( Children [ 0 ] );
+				}
+			}
+
+            base.OnUpdate ( gameTime );
 		}
 
 		public override void OnPostProcess ()

@@ -18,6 +18,8 @@ namespace SpriteTest
 		int vertexShader, fragmentShader;
 		int program;
 
+		int transformIndex, texLocation;
+
 		public SpriteOpenGL ()
 		{
 			GL.CreateVertexArrays ( 1, out vertexArrayObject );
@@ -119,11 +121,15 @@ void main ()
 			GL.Enable ( EnableCap.DepthTest );
 			GL.Disable ( EnableCap.CullFace );
 
-			GL.UniformBlockBinding ( program, GL.GetUniformBlockIndex ( program, "transform" ), 0 );
+			if ( transformIndex == 0 )
+				transformIndex = GL.GetUniformBlockIndex ( program, "transform" );
+			GL.UniformBlockBinding ( program, transformIndex, 0 );
 			drawer.SetConstant ( bitmap, world, context );
 
 			GL.BindTexture ( TextureTarget.Texture2D, ( bitmap as BitmapOpenGL ).texture );
-			GL.Uniform1 ( GL.GetUniformLocation ( program, "tex" ), 0 );
+			if ( texLocation == 0 )
+				texLocation = GL.GetUniformLocation ( program, "tex" );
+			GL.Uniform1 ( texLocation, 0 );
 
 			GL.BindVertexArray ( vertexArrayObject );
 			GL.DrawArrays ( PrimitiveType.TriangleStrip, 0, 4 );

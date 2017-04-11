@@ -27,6 +27,11 @@ namespace SpriteTest
 			base.OnPostProcess ();
 		}
 
+		static ParallelOptions parallelOptions = new ParallelOptions ()
+		{
+			MaxDegreeOfParallelism = Environment.ProcessorCount,
+		};
+
 		public override void OnDraw ( GameTime gameTime )
 		{
 			var contains = from o in GetContains where o.IsVisible select o;
@@ -34,6 +39,7 @@ namespace SpriteTest
 				Task.WaitAll ( Task.Run (
 					() => Parallel.ForEach<GameObject> (
 						contains,
+						parallelOptions,
 						( gameObject ) => gameObject.OnDraw ( gameTime )
 					)
 				) );

@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,6 +52,10 @@
       <HintPath>..\packages\SharpDX.Direct3D11.3.0.2\lib\net45\SharpDX.Direct3D11.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SharpDX.Direct3D12, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D12.3.0.2\lib\net45\SharpDX.Direct3D12.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.Direct3D9.3.0.2\lib\net45\SharpDX.Direct3D9.dll</HintPath>
       <Private>True</Private>
@@ -73,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameObjects\DX11\BitmapDX11.cs" />
+    <Compile Include="GameObjects\DX12\BitmapDX12.cs" />
     <Compile Include="GameObjects\DX9\BitmapDX9.cs" />
     <Compile Include="GameObjects\DX9\DrawerDX9.cs" />
     <Compile Include="GameObjects\DX9\SpriteDX9.cs" />
@@ -127,7 +133,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Test3.png" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Test1.jpg" />
     <EmbeddedResource Include="Resources\Test2.jpg" />

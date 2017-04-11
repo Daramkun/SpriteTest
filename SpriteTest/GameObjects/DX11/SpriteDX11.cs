@@ -18,6 +18,7 @@ namespace SpriteTest
 		SharpDX.Direct3D11.PixelShader pixelShader;
 		SharpDX.Direct3D11.RasterizerState rasterizerState;
 		SharpDX.Direct3D11.DepthStencilState depthStencilState;
+		SharpDX.Direct3D11.BlendState blendState;
 
 		public SpriteDX11 ()
 		{
@@ -29,13 +30,13 @@ namespace SpriteTest
 				new Vertex { Position = new Vector3 ( 1, 1, 0 ), TexCoord = new Vector2 ( 1, 1 ) },
 			};
 
-			vertexBuffer = new SharpDX.Direct3D11.Buffer ( Program.d3dDevice, new SharpDX.Direct3D11.BufferDescription ()
+			vertexBuffer = new SharpDX.Direct3D11.Buffer ( Program.d3dDevice11, new SharpDX.Direct3D11.BufferDescription ()
 			{
 				SizeInBytes = Marshal.SizeOf<Vertex> () * 4,
 				BindFlags = SharpDX.Direct3D11.BindFlags.VertexBuffer,
 				Usage = SharpDX.Direct3D11.ResourceUsage.Default,
 			} );
-			Program.d3dDevice.ImmediateContext.UpdateSubresource<Vertex> ( vertices, vertexBuffer );
+			Program.d3dDevice11.ImmediateContext.UpdateSubresource<Vertex> ( vertices, vertexBuffer );
 
 			vertexBufferBinding = new SharpDX.Direct3D11.VertexBufferBinding ( vertexBuffer, Marshal.SizeOf<Vertex> (), 0 );
 
@@ -71,8 +72,8 @@ VERTEX_OUT main( VERTEX_IN pos )
 	return outValue;
 }
 ", "main", "vs_5_0", SharpDX.D3DCompiler.ShaderFlags.PackMatrixRowMajor );
-			vertexShader = new SharpDX.Direct3D11.VertexShader ( Program.d3dDevice, compiledVertexShader );
-			pixelShader = new SharpDX.Direct3D11.PixelShader ( Program.d3dDevice, SharpDX.D3DCompiler.ShaderBytecode.Compile ( @"
+			vertexShader = new SharpDX.Direct3D11.VertexShader ( Program.d3dDevice11, compiledVertexShader );
+			pixelShader = new SharpDX.Direct3D11.PixelShader ( Program.d3dDevice11, SharpDX.D3DCompiler.ShaderBytecode.Compile ( @"
 Texture2D tex : register ( t0 );
 SamplerState texSampler : register ( s0 );
 
@@ -89,7 +90,7 @@ float4 main( PIXEL_IN inVal ) : SV_TARGET
 }
 ", "main", "ps_5_0" ) );
 
-			inputLayout = new SharpDX.Direct3D11.InputLayout ( Program.d3dDevice, compiledVertexShader, new SharpDX.Direct3D11.InputElement []
+			inputLayout = new SharpDX.Direct3D11.InputLayout ( Program.d3dDevice11, compiledVertexShader, new SharpDX.Direct3D11.InputElement []
 			{
 				new SharpDX.Direct3D11.InputElement ( "POSITION", 0, SharpDX.DXGI.Format.R32G32B32_Float, 0, 0,
 					SharpDX.Direct3D11.InputClassification.PerVertexData, 0 ),
@@ -97,7 +98,7 @@ float4 main( PIXEL_IN inVal ) : SV_TARGET
 					SharpDX.Direct3D11.InputClassification.PerVertexData, 0 ),
 			} );
 
-			rasterizerState = new SharpDX.Direct3D11.RasterizerState ( Program.d3dDevice, new SharpDX.Direct3D11.RasterizerStateDescription ()
+			rasterizerState = new SharpDX.Direct3D11.RasterizerState ( Program.d3dDevice11, new SharpDX.Direct3D11.RasterizerStateDescription ()
 			{
 				CullMode = SharpDX.Direct3D11.CullMode.None,
 				FillMode = SharpDX.Direct3D11.FillMode.Solid,
@@ -105,17 +106,35 @@ float4 main( PIXEL_IN inVal ) : SV_TARGET
 				IsDepthClipEnabled = false,
 			} );
 
-			depthStencilState = new SharpDX.Direct3D11.DepthStencilState ( Program.d3dDevice, new SharpDX.Direct3D11.DepthStencilStateDescription ()
+			depthStencilState = new SharpDX.Direct3D11.DepthStencilState ( Program.d3dDevice11, new SharpDX.Direct3D11.DepthStencilStateDescription ()
 			{
 				IsDepthEnabled = true,
-				DepthComparison = SharpDX.Direct3D11.Comparison.LessEqual,
+				DepthComparison = SharpDX.Direct3D11.Comparison.Less,
 				DepthWriteMask = SharpDX.Direct3D11.DepthWriteMask.All,
 				IsStencilEnabled = false,
 			} );
+			var blendStateDesc = new SharpDX.Direct3D11.BlendStateDescription ()
+			{
+				AlphaToCoverageEnable = false,
+				IndependentBlendEnable = false,
+			};
+			blendStateDesc.RenderTarget [ 0 ] = new SharpDX.Direct3D11.RenderTargetBlendDescription ()
+			{
+				IsBlendEnabled = true,
+				BlendOperation = SharpDX.Direct3D11.BlendOperation.Add,
+				SourceBlend = SharpDX.Direct3D11.BlendOption.SourceAlpha,
+				DestinationBlend = SharpDX.Direct3D11.BlendOption.InverseSourceAlpha,
+				SourceAlphaBlend = SharpDX.Direct3D11.BlendOption.Zero,
+				DestinationAlphaBlend = SharpDX.Direct3D11.BlendOption.Zero,
+				AlphaBlendOperation = SharpDX.Direct3D11.BlendOperation.Add,
+				RenderTargetWriteMask = SharpDX.Direct3D11.ColorWriteMaskFlags.All,
+			};
+			blendState = new SharpDX.Direct3D11.BlendState ( Program.d3dDevice11, blendStateDesc );
 		}
 
 		protected override void Dispose ( bool disposing )
 		{
+			blendState.Dispose ();
 			depthStencilState.Dispose ();
 			rasterizerState.Dispose ();
 			inputLayout.Dispose ();
@@ -135,6 +154,7 @@ float4 main( PIXEL_IN inVal ) : SV_TARGET
 
 			context.OutputMerger.SetDepthStencilState ( depthStencilState );
 			context.Rasterizer.State = rasterizerState;
+			context.OutputMerger.SetBlendState ( blendState, null, 0xffffffff );
 
 			context.VertexShader.SetShader ( vertexShader, null, 0 );
 			context.PixelShader.SetShader ( pixelShader, null, 0 );

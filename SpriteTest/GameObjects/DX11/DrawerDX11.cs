@@ -13,7 +13,7 @@ namespace SpriteTest
 
 		public DrawerDX11 ()
 		{
-			constantBuffer = new SharpDX.Direct3D11.Buffer ( Program.d3dDevice, new SharpDX.Direct3D11.BufferDescription ()
+			constantBuffer = new SharpDX.Direct3D11.Buffer ( Program.d3dDevice11, new SharpDX.Direct3D11.BufferDescription ()
 			{
 				Usage = SharpDX.Direct3D11.ResourceUsage.Dynamic,
 				BindFlags = SharpDX.Direct3D11.BindFlags.ConstantBuffer,
@@ -35,7 +35,7 @@ namespace SpriteTest
 			UniformBuffer data = new UniformBuffer
 			{
 				Projection = Matrix4x4.CreateOrthographicOffCenter ( 0, 800, 600, 0, -100000.0f, 100000.0f ),
-				OverlayColor = new Vector4 ( 1, 1, 1, 1 )
+				OverlayColor = new Vector4 ( 1, 1, 1, 0.5f )
 			};
 			world.GetMatrix ( out data.World, bitmap.Size );
 			//context.UpdateSubresource<UniformBuffer> ( ref data, constantBuffer );

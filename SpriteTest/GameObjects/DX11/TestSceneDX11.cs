@@ -15,7 +15,7 @@ namespace SpriteTest
 	class TestSceneDX11 : Scene, ITestScene
 	{
 		ISprite sprite;
-		IBitmap bitmap1, bitmap2;
+		IBitmap bitmap1, bitmap2, bitmap3;
 
 		Queue<SharpDX.Direct3D11.CommandList> commandLists = new Queue<SharpDX.Direct3D11.CommandList> ();
 
@@ -33,11 +33,11 @@ namespace SpriteTest
 		{
 			SharpDX.Direct3D11.DeviceContext context;
 			if ( Thread.CurrentThread == Program.mainThread )
-				return Program.d3dDevice.ImmediateContext;
+				return Program.d3dDevice11.ImmediateContext;
 			if ( !contexts.TryGetValue ( Thread.CurrentThread, out context ) )
 			{
-				context = new SharpDX.Direct3D11.DeviceContext ( Program.d3dDevice );
-				context.OutputMerger.SetRenderTargets ( Program.d3dDepthStencilView, Program.d3dRenderTargetView );
+				context = new SharpDX.Direct3D11.DeviceContext ( Program.d3dDevice11 );
+				context.OutputMerger.SetRenderTargets ( Program.d3dDepthStencilView11, Program.d3dRenderTargetView11 );
 				context.Rasterizer.SetViewport ( 0, 0, 800, 600, 0, 1 );
 				contexts.TryAdd ( Thread.CurrentThread, context );
 			}
@@ -66,6 +66,7 @@ namespace SpriteTest
 			var assembly = Assembly.GetEntryAssembly ();
 			bitmap1 = new BitmapDX11 ( assembly.GetManifestResourceStream ( "SpriteTest.Resources.Test1.jpg" ) );
 			bitmap2 = new BitmapDX11 ( assembly.GetManifestResourceStream ( "SpriteTest.Resources.Test2.jpg" ) );
+			bitmap3 = new BitmapDX11 ( assembly.GetManifestResourceStream ( "SpriteTest.Resources.Test3.png" ) );
 
 			Program.openTK.Keyboard.KeyUp += KeyboardEvent;
 
@@ -83,6 +84,18 @@ namespace SpriteTest
 
 		public override void OnUpdate ( GameTime gameTime )
 		{
+			if ( Program.sceneContainer.Children.Count > 0 )
+			{
+				var fpsCalc = Program.sceneContainer.Children [ 0 ] as FPSCalculator;
+				if ( fpsCalc.FPS >= 60 )
+					Children.Add ( new SpriteObject ( bitmap3 ) );
+				else
+				{
+					if ( Children.Count > 0 )
+						Children.Remove ( Children [ 0 ] );
+				}
+			}
+
 			base.OnUpdate ( gameTime );
 		}
 
@@ -97,8 +110,8 @@ namespace SpriteTest
 
 		public override void OnDraw ( GameTime gameTime )
 		{
-			Program.d3dDevice.ImmediateContext.ClearRenderTargetView ( Program.d3dRenderTargetView, new SharpDX.Mathematics.Interop.RawColor4 ( 0, 0, 0, 1 ) );
-			Program.d3dDevice.ImmediateContext.ClearDepthStencilView ( Program.d3dDepthStencilView, SharpDX.Direct3D11.DepthStencilClearFlags.Depth, 1, 0 );
+			Program.d3dDevice11.ImmediateContext.ClearRenderTargetView ( Program.d3dRenderTargetView11, new SharpDX.Mathematics.Interop.RawColor4 ( 0, 0, 0, 1 ) );
+			Program.d3dDevice11.ImmediateContext.ClearDepthStencilView ( Program.d3dDepthStencilView11, SharpDX.Direct3D11.DepthStencilClearFlags.Depth, 1, 0 );
 			
 			base.OnDraw ( gameTime );
 		}
@@ -114,12 +127,12 @@ namespace SpriteTest
 
 			foreach ( var commandList in commandLists )
 			{
-				Program.d3dDevice.ImmediateContext.ExecuteCommandList ( commandList, false );
+				Program.d3dDevice11.ImmediateContext.ExecuteCommandList ( commandList, false );
 				commandList.Dispose ();
 			}
 			commandLists.Clear ();
 
-			Program.dxgiSwapChain.Present ( 1, SharpDX.DXGI.PresentFlags.None );
+			Program.dxgiSwapChain11.Present ( 1, SharpDX.DXGI.PresentFlags.None );
 			Thread.Sleep ( 0 );
 		}
 	}
